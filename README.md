@@ -36,7 +36,9 @@ Config files are located at %APPDATA%/AppName/config.json on windows, or ~/AppNa
 
 ### Flag Formatting
 
-Flags must be in the form of matched string/interface pairs, which can be generated from the ParseArgs function. Flags passed into ParseArgs must be in matched pairs in the form `-key value`. Keys can be preceeded by any number of dashes, all of which will be stripped, except in the case of booleans. Boolean flags can be unpaired and followed immediately by another key so long as that key starts with at least two dashes. In this case the flag will be set to "true" and the next flag will be processed normally.
+Flags can only be used to load string and boolean values.
+
+Flags must be in the form of matched string/interface pairs, which can be generated from the ParseArgs function. Flags passed into ParseArgs must be in matched pairs in the form `-key value`. Keys can be preceeded by any number of dashes, all of which will be stripped, except in the case of booleans. Boolean flags must be unpaired and followed immediately by another key so long as that key starts with at least two dashes. In this case the flag will be set to "true" and the next flag will be processed normally.
 
 For example, the following line of args leads to the map below.
 `-key1 value1 -key2 --key3 value3 ---key4 value4 -key5 --key6`

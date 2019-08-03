@@ -21,11 +21,7 @@ func TestLoad(t *testing.T) {
 			FieldB: "defaultB",
 			FieldC: "defaultC",
 		}
-		envMap := map[string]string{
-			"TEST_FIELDA": "notDefaultA",
-		}
-		envMapper := func(in string) string { val, _ := envMap[in]; return val }
-		err := Load(defaults, "test", nil, nil, envMapper)
+		err := Load(defaults, "test", nil, nil, nil)
 		expected := testType{
 			FieldA: "defaultA",
 			FieldB: "defaultB",
@@ -40,15 +36,15 @@ func TestLoad(t *testing.T) {
 	t.Run("env only", func(t *testing.T) {
 		mfs := fs.New()
 		mfs.On("Open", fmt.Sprintf(defaultConfigLocation, "test")).Return(nil, fmt.Errorf("cannot open file"))
+		envMap := map[string]string{
+			"TEST_FIELDA": "notDefaultA",
+		}
+		envMapper := func(in string) string { val, _ := envMap[in]; return val }
 		defaults := testType{
 			FieldA: "defaultA",
 			FieldB: "defaultB",
 			FieldC: "defaultC",
 		}
-		envMap := map[string]string{
-			"TEST_FIELDA": "notDefaultA",
-		}
-		envMapper := func(in string) string { val, _ := envMap[in]; return val }
 		err := Load(&defaults, "test", nil, mfs, envMapper)
 		expected := testType{
 			FieldA: "notDefaultA",
@@ -76,6 +72,28 @@ func TestLoad(t *testing.T) {
 			FieldA: "notDefaultA",
 			FieldB: "notDefaultB",
 			FieldC: "defaultC",
+		}
+		assert.Equal(t, expected, defaults)
+		assert.NoError(t, err)
+	})
+	t.Run("env and JSON and flags", func(t *testing.T) {
+		mfs := fs.New(fs.NewFile(fmt.Sprintf(defaultConfigLocation, "test"), []byte(`{
+			"fieldB": "notDefaultB"
+		}`), nil, nil, true))
+		defaults := testType{
+			FieldA: "defaultA",
+			FieldB: "defaultB",
+			FieldC: "defaultC",
+		}
+		envMap := map[string]string{
+			"TEST_FIELDA": "notDefaultA",
+		}
+		envMapper := func(in string) string { val, _ := envMap[in]; return val }
+		err := Load(&defaults, "test", map[string]interface{}{"fieldC": "notDefaultC"}, mfs, envMapper)
+		expected := testType{
+			FieldA: "notDefaultA",
+			FieldB: "notDefaultB",
+			FieldC: "notDefaultC",
 		}
 		assert.Equal(t, expected, defaults)
 		assert.NoError(t, err)

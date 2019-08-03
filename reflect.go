@@ -19,14 +19,14 @@ func ParseArgs(args []string) map[string]interface{} {
 		}
 		if i+1 >= len(args) {
 			// Must be a boolean at the end of the args
-			flags[arg] = "true"
+			flags[arg] = true
 			continue
 		}
 		// Next argument exists and this arg is a flag stripped of dashes
 		nextArg := args[i+1]
 		if len(nextArg) >= 3 && nextArg[:2] == "--" {
 			// Next arg is a flag, this is a boolean
-			flags[arg] = "true"
+			flags[arg] = true
 			continue
 		}
 		// No special cases, this is just "-flag value"

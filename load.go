@@ -39,13 +39,15 @@ func Load(defaults interface{}, appName string, flags map[string]interface{}, fs
 		fileSystem: fs,
 		envGetter:  envAccess,
 	}
-	err = l.applyEnv()
-	if err == nil {
-		err = l.applyJSON()
-		if err == nil {
-			err = l.applyFlags()
-		}
+	if l.fileSystem == nil {
+		l.fileSystem = defaultFileSystem
 	}
+	if l.envGetter == nil {
+		l.envGetter = defaultEnvGetter
+	}
+	l.applyEnv()
+	err = l.applyJSON()
+	l.applyFlags()
 	return
 }
 
@@ -72,6 +74,7 @@ func (l *loader) applyJSON() (err error) {
 	return
 }
 
-func (l *loader) applyFlags() (err error) {
-	return
+func (l *loader) applyFlags() {
+	jsonData, _ := json.Marshal(l.flags)
+	json.Unmarshal(jsonData, l.opts)
 }

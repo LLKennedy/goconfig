@@ -29,11 +29,11 @@ func TestParseArgs(t *testing.T) {
 		"key4":       "value4",
 		"key5":       "value5",
 		"key6":       "value6",
-		"boolKey":    "true",
-		"boolKey2":   "true",
-		"boolKey3":   "true",
-		"boolKey4":   "true",
-		"finalBool":  "true",
+		"boolKey":    true,
+		"boolKey2":   true,
+		"boolKey3":   true,
+		"boolKey4":   true,
+		"finalBool":  true,
 		"anotherKey": "anotherValue",
 	}
 	flags := ParseArgs(testData)
