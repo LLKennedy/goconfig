@@ -1,8 +1,6 @@
 stages:
   - compile
   - test
-  - name: deploy
-    if: branch = master
 
 jobs:
   include:
@@ -52,10 +50,3 @@ jobs:
       after_script:
         - $GOPATH/bin/goveralls -coverprofile=c.out -service=travis-ci
         - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-    - name: deploy
-      stage: deploy
-      language: go
-      go: 1.12.x
-      before_script:
-        - export GO111MODULE=on
-      script: exit 0 # write deployment code
