@@ -11,12 +11,15 @@ import (
 type testType struct {
 	FieldA string `json:"fieldA"`
 	FieldB string `json:"fieldB"`
+	FieldC string `json:"fieldC"`
 }
 
 func TestLoad(t *testing.T) {
 	t.Run("panic", func(t *testing.T) {
 		defaults := testType{
 			FieldA: "defaultA",
+			FieldB: "defaultB",
+			FieldC: "defaultC",
 		}
 		envMap := map[string]string{
 			"TEST_FIELDA": "notDefaultA",
@@ -25,6 +28,8 @@ func TestLoad(t *testing.T) {
 		err := Load(defaults, "test", nil, nil, envMapper)
 		expected := testType{
 			FieldA: "defaultA",
+			FieldB: "defaultB",
+			FieldC: "defaultC",
 		}
 		assert.Equal(t, expected, defaults)
 		if assert.Error(t, err) {
@@ -37,6 +42,8 @@ func TestLoad(t *testing.T) {
 		mfs.On("Open", fmt.Sprintf(defaultConfigLocation, "test")).Return(nil, fmt.Errorf("cannot open file"))
 		defaults := testType{
 			FieldA: "defaultA",
+			FieldB: "defaultB",
+			FieldC: "defaultC",
 		}
 		envMap := map[string]string{
 			"TEST_FIELDA": "notDefaultA",
@@ -45,6 +52,8 @@ func TestLoad(t *testing.T) {
 		err := Load(&defaults, "test", nil, mfs, envMapper)
 		expected := testType{
 			FieldA: "notDefaultA",
+			FieldB: "defaultB",
+			FieldC: "defaultC",
 		}
 		assert.Equal(t, expected, defaults)
 		assert.EqualError(t, err, "cannot open file")
@@ -56,6 +65,7 @@ func TestLoad(t *testing.T) {
 		defaults := testType{
 			FieldA: "defaultA",
 			FieldB: "defaultB",
+			FieldC: "defaultC",
 		}
 		envMap := map[string]string{
 			"TEST_FIELDA": "notDefaultA",
@@ -65,6 +75,7 @@ func TestLoad(t *testing.T) {
 		expected := testType{
 			FieldA: "notDefaultA",
 			FieldB: "notDefaultB",
+			FieldC: "defaultC",
 		}
 		assert.Equal(t, expected, defaults)
 		assert.NoError(t, err)

@@ -54,7 +54,9 @@ func (l *loader) applyEnv() (err error) {
 	for _, fieldName := range getFieldNames(l.opts) {
 		capsName := strings.ToUpper(fieldName)
 		val := l.envGetter(fmt.Sprintf("%s_%s", capsApp, capsName))
-		setString(l.opts, fieldName, val)
+		if val != "" {
+			setString(l.opts, fieldName, val)
+		}
 	}
 	return
 }
