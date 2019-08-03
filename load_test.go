@@ -7,7 +7,7 @@ import (
 )
 
 func TestLoad(t *testing.T) {
-	loaded, err := Load(nil, nil, nil, nil)
+	loaded, err := Load(nil, "", nil, nil, nil)
 	assert.Nil(t, loaded)
 	assert.NoError(t, err)
 }

@@ -35,7 +35,7 @@ defaults := myConfig {
 }
 
 // Leave nil to use defaults
-loaded, err := goconfig.Load(defaults, nil, nil, nil)
+loaded, err := goconfig.Load(defaults, "myApp", nil, nil, nil)
 if err != nil {
     // handle errors
 }
