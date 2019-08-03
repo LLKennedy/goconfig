@@ -1,3 +1,5 @@
 package goconfig
 
-const defaultConfigLocation = "~/%s/config.json"
+func defaultConfigLocation() string {
+	return "~/%s/config.json"
+}

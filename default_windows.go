@@ -1,3 +1,10 @@
 package goconfig
 
-const defaultConfigLocation = "%%APPDATA%%/%s/config.json"
+import (
+	"fmt"
+	"os"
+)
+
+func defaultConfigLocation() string {
+	return fmt.Sprintf("%s/%%s/config.json", os.Getenv("APPDATA"))
+}
