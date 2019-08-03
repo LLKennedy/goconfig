@@ -24,13 +24,19 @@ You don't get to choose the order of priority. Defaults are used to begin, which
 
 ### Input Struct
 
-You must provide a pointer to a struct. If you wish to load any fields from JSON or flags, you must tag these fields with JSON tags.
+The default struct can be used to load any value type supported by Go.
+
+You must provide a pointer to a struct filled with default values. If you wish to load any fields from JSON or flags, you must tag these fields with JSON tags.
 
 ### Environment Variables
+
+Environment variables can only be used to load string and boolean values.
 
 Environment variables are in the form APPNAME_FIELDNAME, where APPNAME is the all caps version of the application name passed into the Load function and FIELDNAME is the all caps version of a field in the struct passed into Load.
 
 ### Config File Location
+
+Config files can be used to load any value type supported by JSON.
 
 Config files are located at %APPDATA%/AppName/config.json on windows, or ~/AppName/config.json on linux and mac. In this case, AppName is the exact case-sensitive name passed into Load.
 
