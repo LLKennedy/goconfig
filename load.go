@@ -1,6 +1,7 @@
 package goconfig
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"runtime/debug"
@@ -59,6 +60,13 @@ func (l *loader) applyEnv() (err error) {
 }
 
 func (l *loader) applyJSON() (err error) {
+	var file vfs.ReadSeekCloser
+	file, err = l.fileSystem.Open(fmt.Sprintf(defaultConfigLocation, l.appName))
+	if err == nil {
+		defer file.Close()
+		decoder := json.NewDecoder(file)
+		err = decoder.Decode(l.opts)
+	}
 	return
 }
 
