@@ -22,6 +22,10 @@ This library assumes a few things about how you're loading and storing config. I
 
 You don't get to choose the order of priority. Defaults are used to begin, which are overwritten by environment variables, which are overwritten by values from a config file, which are overwritten by runtime executable flags.
 
+### Input Struct
+
+You must provide a pointer to a struct. If you wish to load any fields from JSON or flags, you must tag these fields with JSON tags.
+
 ### Environment Variables
 
 Environment variables are in the form APPNAME_FIELDNAME, where APPNAME is the all caps version of the application name passed into the Load function and FIELDNAME is the all caps version of a field in the struct passed into Load.
