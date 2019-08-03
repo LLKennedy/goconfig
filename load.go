@@ -1,7 +1,10 @@
 package goconfig
 
 import (
+	"fmt"
 	"os"
+	"runtime/debug"
+	"strings"
 
 	"golang.org/x/tools/godoc/vfs"
 )
@@ -12,7 +15,7 @@ var (
 )
 
 type loader struct {
-	defaults   interface{}
+	opts       interface{}
 	appName    string
 	flags      map[string]interface{}
 	fileSystem vfs.FileSystem
@@ -21,42 +24,44 @@ type loader struct {
 
 // Load loads the default config location on the provided file system, returning defaults for any keys not present in the config file.
 // Options start as defaults, then load from environment variables, then a config file, then runtime flags, each overriding the previous.
-func Load(defaults interface{}, appName string, flags map[string]interface{}, fs vfs.FileSystem, envAccess func(string) string) (opts interface{}, err error) {
-	opts = defaults
+func Load(defaults interface{}, appName string, flags map[string]interface{}, fs vfs.FileSystem, envAccess func(string) string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			// This isn't elegant, but it is helpful
+			err = fmt.Errorf("caught panic: %v\n%s", r, debug.Stack())
+		}
+	}()
 	l := &loader{
-		defaults:   defaults,
+		opts:       defaults,
 		appName:    appName,
 		flags:      flags,
 		fileSystem: fs,
 		envGetter:  envAccess,
 	}
-	var withEnv interface{}
-	withEnv, err = l.applyEnv(defaults)
+	err = l.applyEnv()
 	if err == nil {
-		var withJSON interface{}
-		withJSON, err = l.applyJSON(withEnv)
+		err = l.applyJSON()
 		if err == nil {
-			var withFlags interface{}
-			withFlags, err = l.applyFlags(withJSON)
-			if err == nil {
-				opts = withFlags
-			}
+			err = l.applyFlags()
 		}
 	}
 	return
 }
 
-func (l *loader) applyEnv(partial interface{}) (opts interface{}, err error) {
-	opts = partial
+func (l *loader) applyEnv() (err error) {
+	capsApp := strings.ToUpper(l.appName)
+	for _, fieldName := range getFieldNames(l.opts) {
+		capsName := strings.ToUpper(fieldName)
+		val := l.envGetter(fmt.Sprintf("%s_%s", capsApp, capsName))
+		setString(l.opts, fieldName, val)
+	}
 	return
 }
 
-func (l *loader) applyJSON(partial interface{}) (opts interface{}, err error) {
-	opts = partial
+func (l *loader) applyJSON() (err error) {
 	return
 }
 
-func (l *loader) applyFlags(partial interface{}) (opts interface{}, err error) {
-	opts = partial
+func (l *loader) applyFlags() (err error) {
 	return
 }

@@ -28,18 +28,14 @@ type myConfig struct{
 
 ...
 
-defaults := myConfig {
+config := myConfig {
     FieldA: "something",
     FieldB: "something else",
     MoreComplexFiled: "stuff",
 }
 
-// Leave nil to use defaults
-loaded, err := goconfig.Load(defaults, "myApp", nil, nil, nil)
-if err != nil {
-    // handle errors
-}
-filledConfig, _ := loaded.(myConfig) // returned value will ALWAYS be of provided type
+// Leave nil to use defaults, results written to pointer
+err := goconfig.Load(&config, "myApp", nil, nil, nil)
 ```
 
 ## Testing

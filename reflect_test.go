@@ -45,6 +45,15 @@ func TestGetFieldTags(t *testing.T) {
 		FieldA string `json:"a"`
 		FieldB string `json:"b"`
 	}{}
-	list := getFieldTags(thing)
+	list := getFieldTags(&thing)
 	assert.Equal(t, []string{"a", "b"}, list)
+}
+
+func TestGetFieldNames(t *testing.T) {
+	thing := struct {
+		FieldA string `json:"a"`
+		FieldB string `json:"b"`
+	}{}
+	list := getFieldNames(&thing)
+	assert.Equal(t, []string{"FieldA", "FieldB"}, list)
 }

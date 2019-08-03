@@ -41,9 +41,26 @@ func ParseArgs(args []string) map[string]interface{} {
 // This allows auto-filtering and auto-mapping of runtime flags to config options
 func getFieldTags(in interface{}) []string {
 	var tags []string
-	t := reflect.TypeOf(in)
+	t := reflect.TypeOf(in).Elem()
 	for i := 0; i < t.NumField(); i++ {
 		tags = append(tags, t.Field(i).Tag.Get("json"))
 	}
 	return tags
+}
+
+// getFieldNames returns the names of each field in the Options struct.
+func getFieldNames(in interface{}) []string {
+	var names []string
+	t := reflect.TypeOf(in).Elem()
+	for i := 0; i < t.NumField(); i++ {
+		names = append(names, t.Field(i).Name)
+	}
+	return names
+}
+
+// setString sets a specified field name to be a string value
+func setString(opts interface{}, fieldName, val string) {
+	// Get field by name, set value to input string
+	reflect.ValueOf(opts).Elem().FieldByName(fieldName).SetString(val)
+	return
 }
