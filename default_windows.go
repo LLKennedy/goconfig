@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
-func defaultConfigLocation() string {
-	return fmt.Sprintf("%s/%%s/config.json", os.Getenv("APPDATA"))
+// DefaultConfigLocation returns the expected config file location for a specific application.
+func DefaultConfigLocation(appName string) string {
+	return fmt.Sprintf("%s/%s/config.json", os.Getenv("APPDATA"), appName)
 }

@@ -35,7 +35,7 @@ func TestLoad(t *testing.T) {
 	})
 	t.Run("env only", func(t *testing.T) {
 		mfs := fs.New()
-		mfs.On("Open", fmt.Sprintf(defaultConfigLocation(), "test")).Return(nil, fmt.Errorf("cannot open file"))
+		mfs.On("Open", DefaultConfigLocation("test")).Return(nil, fmt.Errorf("cannot open file"))
 		envMap := map[string]string{
 			"TEST_FIELDA": "notDefaultA",
 		}
@@ -55,7 +55,7 @@ func TestLoad(t *testing.T) {
 		assert.EqualError(t, err, "cannot open file")
 	})
 	t.Run("env and JSON", func(t *testing.T) {
-		mfs := fs.New(fs.NewFile(fmt.Sprintf(defaultConfigLocation(), "test"), []byte(`{
+		mfs := fs.New(fs.NewFile(DefaultConfigLocation("test"), []byte(`{
 			"fieldB": "notDefaultB"
 		}`), nil, nil, true))
 		defaults := testType{
@@ -77,7 +77,7 @@ func TestLoad(t *testing.T) {
 		assert.NoError(t, err)
 	})
 	t.Run("env and JSON and flags", func(t *testing.T) {
-		mfs := fs.New(fs.NewFile(fmt.Sprintf(defaultConfigLocation(), "test"), []byte(`{
+		mfs := fs.New(fs.NewFile(DefaultConfigLocation("test"), []byte(`{
 			"fieldB": "notDefaultB"
 		}`), nil, nil, true))
 		defaults := testType{
